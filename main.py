@@ -1,4 +1,11 @@
 import re
+import sys
+
+if len(sys.argv) != 2:
+    print("Please include website url")
+    sys.exit()
+
+website_url = sys.argv[1]
 
 directories = []
 subdomains = []
