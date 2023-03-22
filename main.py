@@ -9,12 +9,12 @@ def main():
 
     website_url = sys.argv[1]
     
-    url = re.search(r"//(.*)", website_url).group(1)
+    url = re.search(r"(https://www\.|https://)?(.*)", website_url).group(2)
 
     html = ''
     try:
-        response = requests.get(website_url)
-    except requests.exceptions as e:
+        response = requests.get('https://' + url)
+    except requests.exceptions.ConnectionError as e:
         print('An error occurred:', e)
     else:
         print(response.status_code)
