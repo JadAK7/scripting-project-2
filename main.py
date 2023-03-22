@@ -1,11 +1,22 @@
 import re
 import sys
+import requests
 
 if len(sys.argv) != 2:
     print("Please include website url")
     sys.exit()
 
 website_url = sys.argv[1]
+
+html = ''
+try:
+    response = requests.get(website_url)
+except requests.exceptions as e:
+    print('An error occurred:', e)
+else:
+    print(response.status_code)
+    html = response.text
+
 
 directories = []
 subdomains = []
