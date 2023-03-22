@@ -5,6 +5,8 @@ import requests
 subdomains_output = 'subdomains_output.bat'
 directories_output = 'directories_output.bat'
 files_output = 'files_output.bat'
+
+
 def main():
     if len(sys.argv) != 2:
         print("Please include website url")
@@ -40,6 +42,8 @@ def main():
                 directories.append(directory)
                 
     test_subdomains(subdomains, url)
+    test_directories(directories, url)
+                
     return html
 
 def test_subdomains(subdomains, url):
@@ -53,4 +57,22 @@ def test_subdomains(subdomains, url):
                         f.write('\n')
             except:
                 pass
+
+def test_directories(directories, url):
+    with open(directories_output, 'w') as f:
+        for directory in directories:
+            try:
+                test_url = "https://" + url + "/" + directory
+                response = requests.head(test_url)
+                print(test_url)
+                print(response)
+                if(response.status_code >= 200 and response.status_code < 399):
+                        f.write(test_url)
+                        f.write('\n')
+            except:
+                pass
+            
+def scan_html(html):
+    pass
+
 main()
