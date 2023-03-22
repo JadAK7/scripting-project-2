@@ -2,6 +2,9 @@ import re
 import sys
 import requests
 
+subdomains_output = 'subdomains_output.bat'
+directories_output = 'directories_output.bat'
+files_output = 'files_output.bat'
 def main():
     if len(sys.argv) != 2:
         print("Please include website url")
@@ -36,6 +39,18 @@ def main():
                 directory = match.string
                 directories.append(directory)
                 
+    test_subdomains(subdomains, url)
     return html
 
+def test_subdomains(subdomains, url):
+    with open(subdomains_output, 'w') as f:
+        for subdomain in subdomains:
+            try:
+                test_url = "https://" + subdomain.strip() + "." + url
+                response = requests.head(test_url)
+                if(response.status_code >= 200 and response.status_code < 399):
+                        f.write(test_url)
+                        f.write('\n')
+            except:
+                pass
 main()
