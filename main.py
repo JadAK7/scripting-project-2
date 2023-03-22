@@ -15,16 +15,7 @@ def main():
     website_url = sys.argv[1]
     
     url = re.search(r"(https://www\.|https://)?(.*)", website_url).group(2)
-
-    html = ''
-    try:
-        response = requests.get('https://' + url)
-    except requests.exceptions.ConnectionError as e:
-        print('An error occurred:', e)
-    else:
-        print(response.status_code)
-        html = response.text
-
+    scan_html(url)
 
     directories = []
     subdomains = []
@@ -44,7 +35,7 @@ def main():
     test_subdomains(subdomains, url)
     test_directories(directories, url)
                 
-    return html
+    return True
 
 def test_subdomains(subdomains, url):
     with open(subdomains_output, 'w') as f:
@@ -72,7 +63,22 @@ def test_directories(directories, url):
             except:
                 pass
             
-def scan_html(html):
-    pass
+def scan_html(url):
+    html = ''
+    try:
+        html = requests.get("https://" + url)
+    except requests.exceptions.RequestException as e:
+        print(e)
+        pass
+    pattern = r'<a\s+(?:[^>]*?\s+)?href="([^"]*)"'
+
+    matches = re.findall(pattern, html.text)
+    
+    print(matches)
+
+    with open(files_output, 'w') as f:
+        for link in matches:
+                f.write(link)
+                f.write('\n')
 
 main()
